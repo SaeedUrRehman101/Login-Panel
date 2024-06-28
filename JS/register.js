@@ -158,8 +158,11 @@ $(document).ready(function () {
             emptyinput("#confirm-password")
         }
 
+        // else if ((!nameRE.test(username)) && (!emailRE.test(useremail)) && (!phoneRE.test(userphone)) && (!passwordRE.test(password)) && (userconfirmpass != password)) {
+        //     alert("Invalid Data Please follow the Valid Pattern!") "The code which our teacher writed in the class"
+        // }
 
-        else if ((!nameRE.test(username)) && (!emailRE.test(useremail)) && (!phoneRE.test(userphone)) && (!passwordRE.test(password)) && (userconfirmpass != password)) {
+        else if (!((nameRE.test(username)) && (emailRE.test(useremail)) && (phoneRE.test(userphone)) && (passwordRE.test(password)) && (userconfirmpass == password) )) {
             alert("Invalid Data Please follow the Valid Pattern!")
         }
 
@@ -181,10 +184,50 @@ $(document).ready(function () {
             // console.log(previewdta);
             localStorage.setItem('details', JSON.stringify(previewdta));
             alert('Data has been submited Succesfully.....')
-            location.assign('/index.html')
+            location.assign('login.html')
 
         }
 
     });
+
+        $("#login").on("click",function(){
+            let useremail = $('#email').val();
+            let emailRE = /^[\w]{3,17}[@][a-z]{5,8}[.][a-z]{3}$/;
+            let password = $('#password').val();
+            let passwordRE = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[\d])(?=.*[@$&%#*])[A-Z,a-z,\d,@$&%#*]{8,15}$/;
+    
+            if (!(useremail && password)){
+                emptyinput("#email");
+                emptyinput("#password");
+            }
+
+            else if ((!emailRE.test(useremail)) || (!passwordRE.test(password))){
+                alert("Invalid data Please follow the valid data")
+            }
+
+            else if (useremail && password){
+                let userDetail=JSON.parse(localStorage.getItem("details"));
+                if(localStorage.getItem("details")==null){
+                    alert("Register Your Acount First");
+                    location.assign("register.html");
+                }
+                else{
+                    let x=false;
+                    for(let index in userDetail){
+                        if(userDetail[index].email==useremail && userDetail[index].password==password){
+                            alert("Logedin successfully");
+                            window.location.href="dashboard.html?userId="+index;
+                            x=true;
+                        }
+                    }
+
+                    if(!x){
+                        alert("Data doesn't Match")
+                    }
+                    
+                }
+            }
+
+        })
 
 })
